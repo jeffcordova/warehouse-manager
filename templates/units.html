@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Units{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Storage Units</h2>
+    <a href="/units/add" class="btn btn-primary btn-sm">Add Unit</a>
+</div>
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Daily Rate</th>
+                <th>Status</th>
+                <th>Tenant</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for unit in units %}
+            <tr>
+                <td>{{ unit['id'] }}</td>
+                <td>{{ unit['name'] }}</td>
+                <td>₱{{ '%.2f'|format(unit['daily_rate']) }}</td>
+                {% if unit['occupancy_id'] %}
+                <td><span class="badge bg-success">Occupied</span></td>
+                <td>{{ unit['tenant_name'] }}</td>
+                {% else %}
+                <td><span class="badge bg-secondary">Vacant</span></td>
+                <td>-</td>
+                {% endif %}
+                <td>
+                    <a href="/units/edit/{{ unit['id'] }}" class="btn btn-sm btn-warning">Edit</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

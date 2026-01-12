@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Storage Management{% endblock %}</title>
+    <!-- Bootstrap CSS from CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUa6r3brdM0QeKWvG7M6dH5fmcRn5ljbpyR3XdAP7gA6fNaJ4vLW98bblXgN" crossorigin="anonymous">
+    <style>
+        body {
+            padding-top: 4rem;
+        }
+        .nav-link.active {
+            font-weight: bold;
+        }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Warehouse Storage</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/units">Units</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/tenants">Tenants</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/occupancies">Occupancies</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/billing">Billing</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/invoices">Invoices</a></li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    {% if user %}
+                    <li class="nav-item"><span class="navbar-text me-2">Logged in as {{ user.username }}</span></li>
+                    <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+                    {% else %}
+                    <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main class="container">
+        {% if error %}
+        <div class="alert alert-danger" role="alert">{{ error }}</div>
+        {% endif %}
+        {% if message %}
+        <div class="alert alert-info" role="alert">{{ message }}</div>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-PLrA4mEhwrKb0tE1HvI2pYjLr58xBdZumO/gWWThTc0qJ66a4k0bRpNJ3deuCEx9" crossorigin="anonymous"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

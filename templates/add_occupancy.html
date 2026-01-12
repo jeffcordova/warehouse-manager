@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Assign Unit{% endblock %}
+
+{% block content %}
+<h2>Assign Unit to Tenant</h2>
+{% if units|length == 0 %}
+<div class="alert alert-warning">All units are currently occupied. Please add more units or end an existing occupancy first.</div>
+{% else %}
+<form method="post" action="/occupancies/add">
+    <div class="mb-3">
+        <label for="unit_id" class="form-label">Select Unit</label>
+        <select class="form-select" id="unit_id" name="unit_id" required>
+            {% for unit in units %}
+            <option value="{{ unit['id'] }}" {% if preselected_unit is not none and unit['id'] == preselected_unit %}selected{% endif %}>{{ unit['name'] }} (₱{{ '%.2f'|format(unit['daily_rate']) }}/day)</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="tenant_id" class="form-label">Select Tenant</label>
+        <select class="form-select" id="tenant_id" name="tenant_id" required>
+            {% for tenant in tenants %}
+            <option value="{{ tenant['id'] }}">{{ tenant['name'] }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="start_date" class="form-label">Start Date</label>
+        <input type="date" class="form-control" id="start_date" name="start_date" value="{{ today }}" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Assign</button>
+    <a href="/occupancies" class="btn btn-secondary">Cancel</a>
+</form>
+{% endif %}
+{% endblock %}

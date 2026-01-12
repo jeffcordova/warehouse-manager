@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Invoices{% endblock %}
+
+{% block content %}
+<h2>Invoices</h2>
+<form method="get" action="/invoices" class="row g-3 mb-4">
+    <div class="col-md-3">
+        <label for="month" class="form-label">Month</label>
+        <select class="form-select" name="month" id="month">
+            <option value="">All</option>
+            {% for m in months %}
+            <option value="{{ m.value }}" {% if selected_month and m.value == selected_month|int %}selected{% endif %}>{{ m.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label for="year" class="form-label">Year</label>
+        <input type="number" class="form-control" name="year" id="year" value="{{ selected_year if selected_year else '' }}" min="2000" max="2100">
+    </div>
+    <div class="col-md-3 align-self-end">
+        <button type="submit" class="btn btn-primary">Filter</button>
+    </div>
+    {% if selected_year and selected_month %}
+    <div class="col-md-3 align-self-end">
+        <a href="/invoices/generate?year={{ selected_year }}&month={{ selected_month }}" class="btn btn-success">Generate Invoices</a>
+    </div>
+    {% endif %}
+</form>
+
+{% if invoices %}
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Tenant</th>
+                <th>Period</th>
+                <th>Total Amount</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for inv in invoices %}
+            <tr {% if inv.is_due %}class="table-warning"{% endif %}>
+                <td>{{ inv.tenant_name }}</td>
+                <td>{{ inv.period }}</td>
+                <td>₱{{ '%.2f'|format(inv.total_amount) }}</td>
+                <td>
+                    {% if inv.status == 'paid' %}
+                        <span class="badge bg-success">Paid</span>
+                    {% elif inv.is_due %}
+                        <span class="badge bg-danger">Overdue</span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark">Pending</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="/invoice/{{ inv.id }}" class="btn btn-sm btn-primary">View</a>
+                    {% if inv.status != 'paid' %}
+                    <a href="/invoice/{{ inv.id }}/pay" class="btn btn-sm btn-success">Mark Paid</a>
+                    {% endif %}
+                    <a href="/invoice/{{ inv.id }}/pdf" class="btn btn-sm btn-secondary">PDF</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p>No invoices found for the selected period.</p>
+{% endif %}
+{% endblock %}

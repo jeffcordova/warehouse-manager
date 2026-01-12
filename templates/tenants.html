@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Tenants{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Tenants</h2>
+    <a href="/tenants/add" class="btn btn-primary btn-sm">Add Tenant</a>
+</div>
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tenant in tenants %}
+            <tr>
+                <td>{{ tenant['id'] }}</td>
+                <td>{{ tenant['name'] }}</td>
+                <td>{{ tenant['email'] or '-' }}</td>
+                <td>{{ tenant['phone'] or '-' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

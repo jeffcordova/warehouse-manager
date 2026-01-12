@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Add Tenant{% endblock %}
+
+{% block content %}
+<h2>Add Tenant</h2>
+<form method="post" action="/tenants/add">
+    <div class="mb-3">
+        <label for="name" class="form-label">Full Name</label>
+        <input type="text" class="form-control" id="name" name="name" required>
+    </div>
+    <div class="mb-3">
+        <label for="email" class="form-label">Email Address (optional)</label>
+        <input type="email" class="form-control" id="email" name="email">
+    </div>
+    <div class="mb-3">
+        <label for="phone" class="form-label">Phone Number (optional)</label>
+        <input type="text" class="form-control" id="phone" name="phone">
+    </div>
+    <button type="submit" class="btn btn-primary">Add Tenant</button>
+    <a href="/tenants" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

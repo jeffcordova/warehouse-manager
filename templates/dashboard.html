@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Dashboard</h2>
+    <div>
+        <a href="/units/add" class="btn btn-primary btn-sm">Add Unit</a>
+        <a href="/tenants/add" class="btn btn-primary btn-sm">Add Tenant</a>
+        <a href="/occupancies/add" class="btn btn-primary btn-sm">Assign Unit</a>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Unit</th>
+                <th>Daily Rate</th>
+                <th>Status</th>
+                <th>Tenant</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Days Remaining</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for unit in units %}
+            <tr>
+                <td>{{ unit['name'] }}</td>
+                <td>₱{{ '%.2f'|format(unit['daily_rate']) }}</td>
+                {% if unit['occupancy_id'] %}
+                <td><span class="badge bg-success">Occupied</span></td>
+                <td>{{ unit['tenant_name'] }}</td>
+                <td>{{ unit['start_date'] }}</td>
+                <td>{{ unit['end_date'] if unit['end_date'] else '-' }}</td>
+                <td>
+                    {% if unit['days_remaining'] is not none %}
+                        {% if unit['days_remaining'] <= 30 %}
+                            <span class="text-danger">{{ unit['days_remaining'] }} day{{ 's' if unit['days_remaining'] != 1 else '' }}</span>
+                        {% else %}
+                            {{ unit['days_remaining'] }} day{{ 's' if unit['days_remaining'] != 1 else '' }}
+                        {% endif %}
+                    {% else %}-{% endif %}
+                </td>
+                <td><a href="/occupancies/end/{{ unit['occupancy_id'] }}" class="btn btn-sm btn-warning">End Occupancy</a></td>
+                {% else %}
+                <td><span class="badge bg-secondary">Vacant</span></td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td><a href="/occupancies/add?unit_id={{ unit['id'] }}" class="btn btn-sm btn-success">Assign</a></td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
